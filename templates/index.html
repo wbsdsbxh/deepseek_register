@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeepSeek 注册控制台</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+  <h1>DeepSeek 注册控制台</h1>
+  <div class="header-right">
+    <span class="badge" id="domainBadge">@{{ domain }}</span>
+    <span class="badge" id="balanceBadge">余额 —</span>
+    <span class="led" id="led"></span>
+    <span id="runState">已停止</span>
+  </div>
+</header>
+
+<main>
+  <!-- 一键控制 -->
+  <section class="card span2">
+    <h2>一键控制</h2>
+    <div class="controls">
+      <label>注册数量
+        <input type="number" id="count" value="1" min="0" title="0 表示无限">
+      </label>
+      <label>间隔（秒）
+        <input type="number" id="interval" value="5" min="1">
+      </label>
+      <button id="btnStart" class="btn primary">开启</button>
+      <button id="btnStop" class="btn danger">停止</button>
+    </div>
+    <p class="hint">数量填 0 表示一直跑。每条流程跑到「验证码已发出」就在下方挂起，你到邮箱取码后填入即可。</p>
+    <div class="metrics">
+      <div class="metric"><span id="mSent">0</span><small>已发码</small></div>
+      <div class="metric"><span id="mSuccess">0</span><small>成功</small></div>
+      <div class="metric"><span id="mFailed">0</span><small>失败</small></div>
+      <div class="metric"><span id="mPending">0</span><small>待填码</small></div>
+    </div>
+  </section>
+
+  <!-- 手动单个 -->
+  <section class="card span2">
+    <h2>手动注册单个账号</h2>
+    <div class="controls">
+      <label class="grow">邮箱
+        <input type="text" id="mEmail" placeholder="someone@{{ domain }}">
+      </label>
+      <label class="grow">密码
+        <input type="text" id="mPassword" placeholder="至少 6 位">
+      </label>
+      <button id="btnManual" class="btn primary">发送验证码</button>
+    </div>
+  </section>
+
+  <!-- 待填验证码 -->
+  <section class="card span2">
+    <h2>等待填入验证码</h2>
+    <div id="pendingList" class="pending-list">
+      <p class="empty">当前没有等待中的任务</p>
+    </div>
+  </section>
+
+  <!-- 账号列表 -->
+  <section class="card span2">
+    <h2>
+      账号列表
+      <span class="tools">
+        <input type="text" id="keyword" placeholder="搜索邮箱/状态">
+        <a class="btn ghost" href="/api/export?format=txt">导出 TXT</a>
+        <a class="btn ghost" href="/api/export?format=csv">导出 CSV</a>
+        <button class="btn ghost" id="btnClear">清空</button>
+      </span>
+    </h2>
+    <div class="table-wrap">
+      <table id="accountTable">
+        <thead>
+          <tr>
+            <th>邮箱</th><th>密码</th><th>状态</th><th>步骤</th><th>更新时间</th><th>操作</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="pager">
+      <button class="btn ghost" id="prevPage">上一页</button>
+      <span id="pageInfo">1 / 1</span>
+      <button class="btn ghost" id="nextPage">下一页</button>
+      <span class="total" id="totalInfo">共 0 条</span>
+    </div>
+  </section>
+
+  <!-- 日志 -->
+  <section class="card span2">
+    <h2>
+      运行日志
+      <span class="tools">
+        <button class="btn ghost" id="btnClearLog">清屏</button>
+      </span>
+    </h2>
+    <pre id="logBox"></pre>
+  </section>
+</main>
+
+<div id="toast" class="toast"></div>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
